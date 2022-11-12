@@ -1,0 +1,28 @@
+services:
+  servicestation:
+    build:
+      context: ../src/
+      dockerfile: ./Dockerfile
+    hostname: servicestation
+    environment:
+      - ACCESS_LOG=1
+      - LIVE_RELOAD=1
+      - NODE_ENV=development
+    volumes:
+      - ./servicestation/dist:/var/www:ro
+      - ./servicestation/user-data-dir:/home/node/user-data-dir:rw
+    restart: always
+    command: [
+      "servicestation",
+      "--no-sandbox",
+      "--enable-logging",
+      "--v=0",
+      "--user-data-dir=/home/node/user-data-dir",
+      "--unsafely-treat-insecure-origin-as-secure=http://github.com,http://google.com",
+      "--disable-default-apps",
+      "--disable-extensions",
+      "--disable-sync",
+      "--unlimited-storage",
+      "--user-agent=Server/2000",
+      "--timeout=2500"
+    ]

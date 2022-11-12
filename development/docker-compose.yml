@@ -1,0 +1,24 @@
+services:
+  servicestation:
+    build:
+      context: ./servicestation/
+      dockerfile: ./Dockerfile
+    hostname: servicestation
+    restart: always
+
+  nginx:
+    build:
+      context: ./nginx/
+      dockerfile: ./Dockerfile
+    depends_on:
+      - servicestation
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - servicestation-le:/etc/letsencrypt:ro
+    restart: always
+
+volumes:
+  servicestation-le:
+    external: true
