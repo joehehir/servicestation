@@ -1,6 +1,6 @@
 module.exports = {
     activate: (() => { /* servicestation::activate */
-        self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()), { once: true });
+        self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()), { once: true });
         self.addEventListener('install', self.skipWaiting, { once: true });
     }).toString(),
     internal: (() => { /* servicestation::internal */
@@ -13,11 +13,13 @@ module.exports = {
                 : new Response(null, { status: 204 }),
         ));
     }).toString(),
-    /* eslint-disable no-new */
+    /* eslint-disable no-global-assign, no-new, no-param-reassign */
     override: (() => { /* servicestation::override */
+        /* response-redirect */
         Object.defineProperty(Response, 'redirect', {
             enumerable: true,
             configurable: false,
+            writable: true,
             value: (url, status = 302) => {
                 new URL(url);
                 if (status < 300 || status > 399) {
@@ -30,8 +32,21 @@ module.exports = {
                     status,
                 });
             },
-            writable: true,
         });
+        /* response-headers-set-cookie */
+        const FetchResponse = Response;
+        class ServiceStationResponse extends FetchResponse {
+            constructor(body, options) {
+                const headers = new Headers(options?.headers);
+                const cookies = headers.get('set-cookie');
+                if (cookies) {
+                    headers.set('x-servicestation-response-headers-set-cookie', cookies);
+                    options.headers = headers;
+                }
+                super(body, options);
+            }
+        }
+        Response = ServiceStationResponse;
     }).toString(),
-    /* eslint-enable no-new */
+    /* eslint-enable no-global-assign, no-new, no-param-reassign */
 };

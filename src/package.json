@@ -1,6 +1,6 @@
 {
   "name": "servicestation",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Containerized service worker execution environment.",
   "main": "index.js",
   "author": {
@@ -8,15 +8,15 @@
     "url": "https://joehehir.com"
   },
   "license": "MIT",
-  "devDependencies": {
-    "chai": "^4.3.6",
-    "chai-http": "^4.3.0",
-    "eslint": "^8.25.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "mocha": "^10.0.0"
-  },
   "dependencies": {
-    "puppeteer-core": "v14.1.1"
+    "puppeteer-core": "v19.11.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "chai-http": "^4.4.0",
+    "eslint": "^8.51.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "mocha": "^10.2.0"
   }
 }

@@ -40,11 +40,16 @@ const handler = async (event) => {
 
     // https://servicestation.test/header/
     const all = Object.fromEntries(event.request.headers.entries());
+
+    const headers = { 'content-type': 'text/plain' };
+
+    if (all['x-set-cookie']) {
+        headers['set-cookie'] = all['x-set-cookie'];
+    }
+
     return new Response(`/header/: ${JSON.stringify(all, null, 2)}`, {
         status: 200,
-        headers: {
-            'content-type': 'text/plain',
-        },
+        headers,
     });
 };
 

@@ -1,4 +1,4 @@
-FROM nginx:1.23.2-alpine
+FROM nginx:1.25.2-alpine3.18
 
 ENV NGINX_ENTRYPOINT_QUIET_LOGS=1
 

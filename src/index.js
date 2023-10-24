@@ -163,6 +163,6 @@ const {
             );
         }
 
-        stdout('port:', process.env.PORT, 'scopes:', process.argv[2]);
+        stdout('port:', `${process.env.PORT},`, 'scopes:', process.argv[2]);
     });
 })();

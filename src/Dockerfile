@@ -1,4 +1,4 @@
-FROM node:16.18-alpine3.16
+FROM node:20.8-alpine3.18
 
 LABEL org.opencontainers.image.source "https://github.com/joehehir/servicestation"
 LABEL org.opencontainers.image.description "ServiceStation is a containerized service worker execution environment."
