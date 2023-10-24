@@ -65,6 +65,6 @@ docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml up --build 
 
 # test servicestation/dist
 export NODE_TLS_REJECT_UNAUTHORIZED=0 \
-    ; ../src/node_modules/.bin/_mocha ./servicestation/dist/index.test.js \
+    ; ../src/node_modules/.bin/_mocha --timeout 4000 ./servicestation/dist/index.test.js \
     ; export NODE_TLS_REJECT_UNAUTHORIZED=1
 ```
