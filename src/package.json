@@ -1,6 +1,6 @@
 {
   "name": "servicestation",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Containerized service worker execution environment.",
   "main": "index.js",
   "author": {
@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "puppeteer-core": "v19.11.1"
+    "puppeteer-core": "v21.3.0"
   },
   "devDependencies": {
     "chai": "^4.3.10",
