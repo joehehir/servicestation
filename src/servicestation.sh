@@ -4,6 +4,7 @@ set -e
 . /usr/src/app/util.sh
 
 readonly ARGV="${*}"
+readonly OFFSET_LOG_SOURCE_LINE_NUMBER=-39
 
 argv_find_by_prefix() (
     prefix="${1}"
@@ -31,11 +32,17 @@ follow_chrome_log() (
         sed_suffix_source=""
         case "${log}" in
             *,[[:space:]]source:[[:space:]]http://*)
-                sed_suffix_source="s#\",[[:space:]]{1}source:[[:space:]]{1}http:\/\/[^/]+(.+)[[:space:]]{1}\(([[:digit:]]+)\)# \(\1:\2\)#"
+                sed_suffix_source="s#\",[[:space:]]{1}source:[[:space:]]{1}http:\/\/[^/]+(.+)[[:space:]]{1}\(([[:digit:]]+)\)# (\1:\2#"
                 ;;
         esac
 
         log="$(printf "%s" "${log}" | sed -r "${sed_prefix_timestamp}; ${sed_suffix_source}")"
+        adjusted_source_line_number="$(
+            printf "%s" "${log}" \
+                | printf "%s%s" "$(grep -Eo "[[:digit:]]+$")" "${OFFSET_LOG_SOURCE_LINE_NUMBER}" \
+                | bc
+        )"
+        log="$(printf "%s" "${log}" | sed -r "s#[[:digit:]]+\$#${adjusted_source_line_number})#")"
         printf "%s" "${log}"
     }
 

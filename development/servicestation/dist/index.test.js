@@ -56,6 +56,19 @@ storage(refs);
                 });
         });
 
+        it('"/stream" should return a buffered response stream', (done) => {
+            chai
+                .request(host)
+                .get('/stream')
+                .end((err, res) => {
+                    if (err) done(err);
+
+                    expect(res).to.have.status(200);
+                    expect(res.text).to.include('This ReadableStream was buffered.');
+                    done();
+                });
+        });
+
         it('"/" should return POST request JSON', (done) => {
             const json = {
                 method: 'POST',

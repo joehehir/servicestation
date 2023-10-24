@@ -54,7 +54,7 @@ module.exports = (host, scopes, mapping, timeout) => {
         }
 
         const init = {
-            credentials: 'same-origin',
+            credentials: 'include',
             method: request.method,
             mode: 'same-origin',
             redirect: 'follow',
@@ -64,7 +64,7 @@ module.exports = (host, scopes, mapping, timeout) => {
 
         // preserve set-cookie headers
         if (Array.isArray(request.headers?.['set-cookie'])) {
-            init.headers['set-cookie'] = request.headers['set-cookie'].join(';').replace(/;+/g, ';');
+            init.headers['x-set-cookie'] = request.headers['set-cookie'].join(';').replace(/;+/g, ';');
         }
 
         // preserve user-agent header
@@ -106,12 +106,12 @@ module.exports = (host, scopes, mapping, timeout) => {
             return;
         }
 
-        if ( // Response.redirect patch
+        if ( // servicestation::override response-redirect
             ret.headers['x-servicestation-response-redirect-url']
             && !(ret.status < 300 || ret.status > 399)
         ) {
             response.writeHead(ret.status, {
-                Location: ret.headers['x-servicestation-response-redirect-url'],
+                location: ret.headers['x-servicestation-response-redirect-url'],
             }).end(() => {
                 log(request, ret.status);
                 request.socket.unref();
@@ -121,7 +121,14 @@ module.exports = (host, scopes, mapping, timeout) => {
 
         const data = new Uint8Array(ret.body);
 
-        const { 'content-encoding': _, ...headers } = ret.headers;
+        const {
+            'content-encoding': _,
+            'x-servicestation-response-headers-set-cookie': cookies,
+            ...headers
+        } = ret.headers;
+
+        // servicestation::override response-headers-set-cookie
+        if (cookies) headers['set-cookie'] = cookies;
 
         // mutually exclusive headers
         if (!('transfer-encoding' in headers)) {

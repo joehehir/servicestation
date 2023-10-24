@@ -14,14 +14,14 @@ module.exports = async (internal, path) => {
         });
 
         if (path === `${internal}index.js`) {
-            return script(`(${inject.internal})();\n(${inject.activate})();\n`);
+            return script(`\n(${inject.activate})();\n(${inject.internal})();\n`);
         }
 
         const decoded = decodeURI(path);
         const [err, index] = await to(reader(`/var/www${decoded}`));
         if (err) throw err;
 
-        return script(`${index}\n(${inject.override})();\n(${inject.activate})();\n`);
+        return script(`\n(${inject.override})();\n(${inject.activate})();\n${index}\n`);
     }
 
     if (path.endsWith('/')) {
